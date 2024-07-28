@@ -1,15 +1,33 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
-import list from "../../public/list.json"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+// eslint-disable-next-line no-unused-vars
+import axios from 'axios';
 // eslint-disable-next-line no-unused-vars
 import Slider from "react-slick";
 import Cards from './Cards';
 function Freebook() {
-    // eslint-disable-next-line no-unused-vars
-    const filterData= list.filter((data)=>data.category==="Free");
+  // eslint-disable-next-line no-unused-vars, no-undef
+  const [book, setBook] = useState([]);
+  // eslint-disable-next-line no-undef
+  useEffect(() => {
+    const getBook = async () => {
+      try {
+        // eslint-disable-next-line no-undef
+        const res = await axios.get("http://localhost:4001/book");
+        console.log(res.data);
+        // eslint-disable-next-line no-unused-vars
+        const data=res.data.filter((data)=>data.category==="Free");
+        setBook(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getBook();
+  }, []);
+  
     // eslint-disable-next-line no-unused-vars
     var settings = {
       dots: true,
@@ -56,7 +74,7 @@ function Freebook() {
    
    <div>
    <Slider {...settings}>
-   {filterData.map((item)=>(
+   {book.map((item)=>(
     <Cards item={item} key={item.id}/>
    ))}
  </Slider>
